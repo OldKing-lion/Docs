@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/KaTeX/0.10.0/katex.min.css">
+  <link rel="stylesheet" href="./static/prism.css">
+</head>
+
+<body>
+  <div id="app"></div>
+  <script>
+    var num = 0;
+    window.$docsify = {
+      name: 'the memory of lionsking',
+      repo: 'https://github.com/OldKing-lion',
+      coverpage: true,
+      loadSidebar: true,
+      subMaxLevel: 2,
+      auto2top: true,
+      nameLink: '/',
+      routerMode: 'history',
+      topMargin: 40,
+      markdown: {
+        renderer: {
+          code: function (code, lang) {
+            if (lang === "dot") {
+              return (
+                '<div class="viz">' + Viz(code, "SVG") + '</div>'
+              );
+            }
+            if (lang === "tex") {
+              return (
+                '<span class="tex">' + katex.renderToString(code, {
+                  throwOnError: false
+                }) + '</span>'
+              );
+            }
+            return this.origin.code.apply(this, arguments);
+          }
+        }
+      },
+      count: {
+        countable: true,
+        fontsize: '0.9em',
+        color: 'rgb(90,90,90)',
+        language: 'chinese'
+      }
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="https://cdn.bootcss.com/viz.js/1.8.0/viz.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="https://cdn.bootcss.com/KaTeX/0.10.0/katex.min.js"></script>
+  <script src="./static/prism.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-csharp.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1.22.0/components/prism-cshtml.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
+
+</body>
+
+</html>
