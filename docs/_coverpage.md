@@ -9,6 +9,5 @@
 - 后端口：.NetCore AbpVnext Dapr
 
 [GitHub](https://github.com/OldKing-lion)
-[Get Started](#quick-start)
 
 ![color](#f0f0f0)
