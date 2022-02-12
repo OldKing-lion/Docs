@@ -1,12 +1,8 @@
 ![logo](https://docsify.js.org/_media/icon.svg)
 
-# The memory of lionsking
+**软件工程的目的是控制复杂性，而不是创造复杂性。**
 
-> .NetCore .Net5 .Net6 技术栈学习记录
-
-- 前端框架：vue blazor
-- UI 类库：element-ui vant blazor
-- 后端口：.NetCore AbpVnext Dapr
+> ——《Microsoft.Net 企业级应用架构设计》开篇
 
 [GitHub](https://github.com/OldKing-lion)
 
