@@ -187,8 +187,8 @@
 
 - 访问服务执行调用：
 
-
     ```csharp
+
         //获取服务地址
         var address = $"http://{service.ServiceAddress}:{service.ServicePort}";
         
@@ -203,6 +203,7 @@
         var greeterReply = await greeterClient.SayHelloAsync(new HelloRequest { Name="HH"});
         Console.WriteLine("调用打招呼服务：" + greeterReply.Message);
         Console.ReadKey();
+        
     ```
 
 至此 Grpc服务和Consul注册发现及调用就完成了，更多更详细的内容请访问微软官网或者博客园晓晨Master大佬的教程。当然或许还有更便捷的内容，后期会再添加进本篇文章内。
