@@ -144,7 +144,7 @@
 
         - 因为grpc依赖Proto文件，client端也需要和服务端一样的proto，这样就要维护两份一模一样的proto，比较省事的办法就是把proto放在一个公用的路径，在项目文件里统一引用共同的proto文件。
         
-        - ~~在实际项目中使用，肯定有多个 proto 文件，每次添加一个Proto文件就要更新一次csproj文件，避免这样的麻烦，可以使用MSBuild来帮助完成文件添加，服务端和客户端一样，只需要改变GrpcServices的值即可：~~ 用这个不生效了
+        - 在实际项目中使用，肯定有多个 proto 文件，每次添加一个Proto文件就要更新一次csproj文件，避免这样的麻烦，可以使用MSBuild来帮助完成文件添加，服务端和客户端一样，只需要改变GrpcServices的值即可：
         
              ```xml
               <ItemGroup>
