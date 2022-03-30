@@ -12,7 +12,7 @@
 
         - Include 表示引入的文件地址
 
-        - GrpcServices 表示服务类型 Server表示是服务端，如果定义客户端需要改为Client
+        - GrpcServices 表示服务类型 Server表示是服务端，如果定义客户端需要改为Client，如果都支持就设置为Both，表示既是客户端又是服务端
 
         - 访问Grpc服务必须使用Grpc Client
 
@@ -92,7 +92,41 @@
         app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
         
         app.Run();
+       
+- 添加服务，使用Consul官方组件：
+
+     ```csharp
+             var consul = new ConsulClient(x =>
+                    {
+                        x.Address = new Uri(options.ConsulUrl);
+                    });
         
+        
+                    var registration = new AgentServiceRegistration
+                    {
+                        ID = Guid.NewGuid().ToString(),//服务实例唯一标识
+                        Name = options.ServiceName,//服务名称
+                        Address = options.ServiceHost,//服务IP地址
+                        Port = options.ServicePort,
+                        Check = new AgentServiceCheck//健康检查
+                        {
+                            DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(5),//有人说这个是标识服务启动多久后注册，但是字面意思好像是取消注册,应该是健康检查多久没通过取消注册
+                            Interval = TimeSpan.FromSeconds(5),//间隔时间
+                            Timeout = TimeSpan.FromSeconds(5),//超时时间
+                            GRPC = options.HealthCheckHost,//Grpc必须使用Grpc
+                            GRPCUseTLS = options.Usetls，//是否使用tls
+                        }
+                    };
+        
+                    consul.Agent.ServiceRegister(registration);//服务注册
+                    //程序终止取消注册
+                    lifetime.ApplicationStopping.Register(() =>
+                    {
+                        consul.Agent.ServiceDeregister(registration.ID).Wait();
+                    });
+
+    ``` 
+    
 - 新建Grpc客户端
 
     - 引用包
@@ -110,7 +144,7 @@
 
         - 因为grpc依赖Proto文件，client端也需要和服务端一样的proto，这样就要维护两份一模一样的proto，比较省事的办法就是把proto放在一个公用的路径，在项目文件里统一引用共同的proto文件。
         
-        - 在实际项目中使用，肯定有多个 proto 文件，每次添加一个Proto文件就要更新一次csproj文件，避免这样的麻烦，可以使用MSBuild来帮助完成文件添加，服务端和客户端一样，只需要改变GrpcServices的值即可：
+        - ~~在实际项目中使用，肯定有多个 proto 文件，每次添加一个Proto文件就要更新一次csproj文件，避免这样的麻烦，可以使用MSBuild来帮助完成文件添加，服务端和客户端一样，只需要改变GrpcServices的值即可：~~ 用这个不生效了
         
              ```xml
               <ItemGroup>
@@ -205,6 +239,12 @@
         Console.ReadKey();
         
     ```
+
+#### 四、Consul动态负载
+
+- 目前的有多种方案，最优的应该是nginx+upsync+consul，这个具体的实现我这里省略了，参考
+[CSDN](https://blog.csdn.net/weixin_54931703/article/details/120874717?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_default&utm_relevant_index=2)
+[CNBLOG](https://www.cnblogs.com/haoworld/p/nginx-ji-yuconsulupsyncnginx-shi-xian-dong-tai-fu-.html)
 
 至此 Grpc服务和Consul注册发现及调用就完成了，更多更详细的内容请访问微软官网或者博客园晓晨Master大佬的教程。当然或许还有更便捷的内容，后期会再添加进本篇文章内。
 
